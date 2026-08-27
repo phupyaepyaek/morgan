@@ -8556,9 +8556,6 @@ tr th {
 
 #food .food-message.is-first { opacity: 0.9; transform: scale(1); }
 #food .food-message.is-climax { color: #4a2b52; opacity: 1; transform: scale(1.02); }
-#food .food-controls { position: absolute; right: 26px; bottom: 22px; z-index: 5; display: flex; gap: 14px; }
-#food .food-control { padding: 3px 0; color: #765d82; border: 0; border-bottom: 1px solid rgba(118, 93, 130, 0.46); background: transparent; font-family: var(--hand); font-size: 1.2rem; }
-#food .food-control:hover { color: #533d61; }
 #food .food-continue { opacity: 0; pointer-events: none; transition: opacity 1600ms ease; }
 #food .food-continue.is-ready { opacity: 1; pointer-events: auto; }
 
@@ -8569,7 +8566,6 @@ tr th {
   #food { height: calc(100svh - 96px); max-height: none; }
   #food .food-canvas { inset: 58px 8px 48px; }
   #food .food-message { font-size: clamp(2rem, 10vw, 3.5rem); }
-  #food .food-controls { right: 18px; bottom: 16px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -9229,10 +9225,6 @@ tr th {
       <div class="food-copy">
         <p id="foodTitle" class="food-message" aria-live="polite"></p>
       </div>
-      <div class="food-controls" aria-label="Memory controls">
-        <button id="foodPauseBtn" class="food-control" type="button">Pause</button>
-        <button id="foodReplayBtn" class="food-control" type="button">Replay</button>
-      </div>
       <button id="foodContinueBtn" class="button button-primary food-continue" type="button" disabled>Continue <span aria-hidden="true">-&gt;</span></button>
     </section>
 
@@ -9408,7 +9400,6 @@ const state = {
   foodIndex: 0,
   foodLayer: 0,
   foodMemories: [],
-  foodPaused: false,
   foodPhase: "opening",
   secretCandleTaps: 0,
   secretUnlocked: false
@@ -9471,8 +9462,6 @@ const foodScene = document.getElementById("food");
 const foodContinueBtn = document.getElementById("foodContinueBtn");
 const foodCanvas = document.getElementById("foodCanvas");
 const foodLine = document.getElementById("foodTitle");
-const foodPauseBtn = document.getElementById("foodPauseBtn");
-const foodReplayBtn = document.getElementById("foodReplayBtn");
 const replayBtn = document.getElementById("replayBtn");
 
 const FOOD_PHOTOS = ["food-photos/food-bowl1.jpg", "food-photos/food-drinks1.jpg", "food-photos/food-hainan.jpg", "food-photos/food-noodles1.jpg", "food-photos/food-noodles2.jpg", "food-photos/food-noodles3.jpg", "food-photos/food-pasta.jpg", "food-photos/food-picnic.jpg", "food-photos/food-shakshuka.jpg", "food-photos/food-thai1.jpg", "food-photos/food-toast.jpg", "food-photos/food-wine.jpg", "food-photos/food-extra1.jpg", "food-photos/food-extra2.jpg", "food-photos/food-extra3.jpg", "food-photos/food-extra4.jpg", "food-photos/food-extra8.jpg", "food-photos/food-flowers.jpg", "food-photos/food-hiking.jpg", "food-photos/food-handhold.jpg"];
@@ -9499,8 +9488,6 @@ balloonStartBtn.addEventListener("click", startBalloonGame);
 envelopeBtn.addEventListener("click", openLetter);
 finaleBtn.addEventListener("click", () => requestScene("food"));
 foodContinueBtn.addEventListener("click", showFinale);
-foodPauseBtn.addEventListener("click", toggleFoodPause);
-foodReplayBtn.addEventListener("click", startFoodMontage);
 replayBtn.addEventListener("click", resetStory);
 
 // DEV-ONLY: scene jumper wiring. Delete this block (and #devNav in the HTML,
@@ -9981,13 +9968,11 @@ function startFoodMontage() {
   state.foodIndex = 0;
   state.foodLayer = 0;
   state.foodMemories = [];
-  state.foodPaused = false;
   state.foodPhase = "opening";
   foodLine.textContent = "";
   foodLine.className = "food-message";
   foodContinueBtn.disabled = true;
   foodContinueBtn.classList.remove("is-ready");
-  foodPauseBtn.textContent = "Pause";
   foodCanvas.querySelectorAll(".food-memory, .food-spark").forEach((element) => element.remove());
   preloadFoodPhoto(0);
   scheduleFoodStep(reducedMotion ? 0 : 350);
@@ -9998,8 +9983,6 @@ function scheduleFoodStep(delay) {
 }
 
 function advanceFoodMemory() {
-  if (state.foodPaused) return;
-
   if (state.foodIndex >= FOOD_PHOTOS.length) {
     revealFoodClimax();
     return;
@@ -10076,13 +10059,6 @@ function finishFoodMontage() {
   foodContinueBtn.disabled = false;
   foodContinueBtn.classList.add("is-ready");
   foodContinueBtn.focus();
-}
-
-function toggleFoodPause() {
-  if (state.foodPhase === "climax" || foodContinueBtn.classList.contains("is-ready")) return;
-  state.foodPaused = !state.foodPaused;
-  foodPauseBtn.textContent = state.foodPaused ? "Resume" : "Pause";
-  if (!state.foodPaused) scheduleFoodStep(reducedMotion ? 0 : 800);
 }
 
 function clearFoodMontage() {
@@ -10195,7 +10171,6 @@ function resetStory() {
   foodLine.className = "food-message";
   foodContinueBtn.disabled = true;
   foodContinueBtn.classList.remove("is-ready");
-  foodPauseBtn.textContent = "Pause";
   state.foodMemories = [];
   foodCanvas.querySelectorAll(".food-memory, .food-spark").forEach((element) => element.remove());
 
