@@ -1043,16 +1043,6 @@ h3 {
   gap: 12px;
 }
 
-.candle-hint {
-  min-height: 1.4em;
-  margin: -2px 0 0;
-  color: var(--ink-soft);
-  font-family: var(--hand);
-  font-size: 1.28rem;
-  font-weight: 700;
-  text-align: center;
-}
-
 .birthday-video-modal {
   position: absolute !important;
   inset: 0;
@@ -3650,8 +3640,7 @@ body[data-scene="landing"] .scene-label {
 }
 
 #candles .scene-meta,
-#candles .eyebrow,
-#candles .candle-hint {
+#candles .eyebrow {
   color: #f4d4f2;
 }
 
@@ -4580,8 +4569,7 @@ h3 {
 }
 
 #candles .eyebrow,
-#candles .counter,
-#candles .candle-hint {
+#candles .counter {
   color: #6f3d50;
 }
 
@@ -6153,10 +6141,6 @@ tr th {
   #candles .candle-footer {
     min-height: 54px;
     gap: 5px;
-  }
-
-  #candles .candle-hint {
-    font-size: 1.05rem;
   }
 
   #stars {
@@ -9071,7 +9055,6 @@ tr th {
 
       <div class="candle-footer">
         <p id="candleCount" class="counter" aria-live="polite">Candles lit: 0 / 21</p>
-        <p id="candleHint" class="candle-hint">Tap the cake to light the candles.</p>
         <button id="wishBtn" class="button button-primary hidden" type="button">Continue</button>
       </div>
 
@@ -9427,7 +9410,6 @@ const envelopeMessage = document.getElementById("envelopeMessage");
 const candleRack = document.getElementById("candleRack");
 const candleCount = document.getElementById("candleCount");
 const cakeTapTarget = document.getElementById("cakeTapTarget");
-const candleHint = document.getElementById("candleHint");
 const wishBtn = document.getElementById("wishBtn");
 const candlesScene = document.getElementById("candles");
 const birthdayVideoModal = document.getElementById("birthdayVideoModal");
@@ -9689,7 +9671,6 @@ function lightNextCandleGroup(event) {
 
   state.candleWaveInProgress = true;
   cakeTapTarget.disabled = true;
-  candleHint.textContent = "A few more candles are lighting...";
   makeClickSparks(event.clientX, event.clientY, 9);
 
   const firstCandle = state.candles.size;
@@ -9705,13 +9686,9 @@ function lightNextCandleGroup(event) {
       if (index !== lastCandle - 1) return;
 
       state.candleWaveInProgress = false;
-      if (lastCandle === CANDLE_TOTAL) {
-        candleHint.textContent = "All 21 are lit. Make your wish.";
-        return;
-      }
+      if (lastCandle === CANDLE_TOTAL) return;
 
       cakeTapTarget.disabled = false;
-      candleHint.textContent = "Tap the cake again to light more candles.";
     }, reducedMotion ? 0 : (index - firstCandle) * 85);
   }
 }
@@ -10147,7 +10124,6 @@ function resetStory() {
   candleCount.textContent = `Candles lit: 0 / ${CANDLE_TOTAL}`;
   cakeTapTarget.disabled = false;
   cakeTapTarget.setAttribute("aria-label", "Tap the cake to light the first three candles");
-  candleHint.textContent = "Tap the cake to light the candles.";
   wishBtn.classList.add("hidden");
   candlesScene.style.setProperty("--candle-light", "0");
   candlesScene.style.setProperty("--cake-brightness", "0.75");
