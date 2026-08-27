@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#ded4fa" />
-  <title>Morgan's Birthday Mini-Game</title>
+  <title>Happy Birthday Morgan!</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=DM+Mono:wght@400;500&family=Italianno&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet" />
@@ -9475,7 +9475,7 @@ const foodPauseBtn = document.getElementById("foodPauseBtn");
 const foodReplayBtn = document.getElementById("foodReplayBtn");
 const replayBtn = document.getElementById("replayBtn");
 
-const FOOD_PHOTOS = ["food-photos/food-bowl1.jpg", "food-photos/food-drinks1.jpg", "food-photos/food-hainan.jpg", "food-photos/food-noodles1.jpg", "food-photos/food-noodles2.jpg", "food-photos/food-noodles3.jpg", "food-photos/food-pasta.jpg", "food-photos/food-picnic.jpg", "food-photos/food-shakshuka.jpg", "food-photos/food-thai1.jpg", "food-photos/food-toast.jpg", "food-photos/food-wine.jpg", "food-photos/food-extra1.png", "food-photos/food-extra2.png", "food-photos/food-extra3.png", "food-photos/food-extra4.png", "food-photos/food-extra8.png", "food-photos/food-flowers.png", "food-photos/food-hiking.png", "food-photos/food-handhold.png"];
+const FOOD_PHOTOS = ["food-photos/food-bowl1.jpg", "food-photos/food-drinks1.jpg", "food-photos/food-hainan.jpg", "food-photos/food-noodles1.jpg", "food-photos/food-noodles2.jpg", "food-photos/food-noodles3.jpg", "food-photos/food-pasta.jpg", "food-photos/food-picnic.jpg", "food-photos/food-shakshuka.jpg", "food-photos/food-thai1.jpg", "food-photos/food-toast.jpg", "food-photos/food-wine.jpg", "food-photos/food-extra1.jpg", "food-photos/food-extra2.jpg", "food-photos/food-extra3.jpg", "food-photos/food-extra4.jpg", "food-photos/food-extra8.jpg", "food-photos/food-flowers.jpg", "food-photos/food-hiking.jpg", "food-photos/food-handhold.jpg"];
 const FOOD_LINE = "to more food with you, to more memories with you.";
 
 let marketCheerTimer = null;
@@ -9989,7 +9989,7 @@ function startFoodMontage() {
   foodContinueBtn.classList.remove("is-ready");
   foodPauseBtn.textContent = "Pause";
   foodCanvas.querySelectorAll(".food-memory, .food-spark").forEach((element) => element.remove());
-  FOOD_PHOTOS.forEach((source) => { const preload = new Image(); preload.src = source; });
+  preloadFoodPhoto(0);
   scheduleFoodStep(reducedMotion ? 0 : 350);
 }
 
@@ -10012,7 +10012,15 @@ function advanceFoodMemory() {
   scheduleFoodStep(reducedMotion ? 0 : 1400);
 }
 
+function preloadFoodPhoto(index) {
+  const source = FOOD_PHOTOS[index];
+  if (!source) return;
+  const preload = new Image();
+  preload.src = source;
+}
+
 function placeFoodMemory(index) {
+  preloadFoodPhoto(index + 1);
   const memory = document.createElement("figure");
   const photo = document.createElement("img");
   const positions = [
