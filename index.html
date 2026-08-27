@@ -10034,8 +10034,8 @@ function placeFoodMemory(index) {
   ];
   const [left, top, rotate] = positions[index % positions.length];
   memory.className = "food-memory";
-  memory.style.left = left;
-  memory.style.top = top;
+  memory.style.left = `min(${left}, calc(100% - clamp(150px, 24vw, 260px)))`;
+  memory.style.top = `min(${top}, calc(100% - clamp(120px, 20vw, 210px)))`;
   memory.style.setProperty("--memory-rotate", rotate);
   memory.style.setProperty("--memory-image", `url("${FOOD_PHOTOS[index]}")`);
   photo.src = FOOD_PHOTOS[index];
