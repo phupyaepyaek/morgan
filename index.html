@@ -1057,6 +1057,46 @@ h3 {
   transition: transform 180ms ease, background-color 180ms ease;
 }
 
+.music-toggle {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 500;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: var(--ink);
+  border: 2px solid var(--line);
+  border-radius: 50%;
+  background: var(--pink);
+  box-shadow: var(--shadow);
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: transform 180ms ease, background-color 180ms ease;
+}
+
+.music-toggle:hover {
+  background: var(--yellow);
+  transform: scale(1.08);
+}
+
+.music-toggle.is-muted {
+  color: var(--ink-soft);
+}
+
+.music-toggle.is-muted span {
+  text-decoration: line-through;
+}
+
+@media (max-width: 760px) {
+  .music-toggle {
+    top: 10px;
+    right: 10px;
+  }
+}
+
 .video-close:hover {
   background: var(--yellow);
   transform: rotate(12deg) scale(1.06);
@@ -8869,6 +8909,9 @@ tr th {
     </div>
   </div>
   <audio id="bgMusic" src="audio/bg-music.m4a" loop preload="auto" hidden></audio>
+  <button id="musicToggleBtn" class="music-toggle" type="button" aria-pressed="false" aria-label="Mute background music">
+    <span aria-hidden="true">&#9834;</span>
+  </button>
 
   <div class="atmosphere" aria-hidden="true">
     <div class="moon moon-one"></div>
@@ -9187,7 +9230,7 @@ tr th {
         <div class="finale-tier tier-middle"></div>
         <div class="finale-tier tier-bottom"></div>
       </div>
-      <p class="eyebrow">with all seriousness</p>
+      <p class="eyebrow"></p>
       <h2 id="finaleTitle">Happy birthday, <span data-friend-name>Morgan</span>.</h2>
       <p class="finale-copy">I believe you'll get through this. Thanks for being in my life.</p>
       <button id="replayBtn" class="text-button" type="button">Start again <span aria-hidden="true">-&gt;</span></button>
@@ -9369,6 +9412,7 @@ const secretAchievement = document.getElementById("secretAchievement");
 const secretAchievementClose = document.getElementById("secretAchievementClose");
 const origamiTransition = document.getElementById("origamiTransition");
 const bgMusic = document.getElementById("bgMusic");
+const musicToggleBtn = document.getElementById("musicToggleBtn");
 
 const promiseArea = document.getElementById("promiseArea");
 const yesBtn = document.getElementById("yesBtn");
@@ -9519,6 +9563,15 @@ function startBackgroundMusic() {
   document.addEventListener(eventName, startBackgroundMusic, { once: true });
 });
 
+function toggleMusicMute() {
+  bgMusic.muted = !bgMusic.muted;
+  musicToggleBtn.classList.toggle("is-muted", bgMusic.muted);
+  musicToggleBtn.setAttribute("aria-pressed", String(bgMusic.muted));
+  musicToggleBtn.setAttribute("aria-label", bgMusic.muted ? "Unmute background music" : "Mute background music");
+}
+
+musicToggleBtn.addEventListener("click", toggleMusicMute);
+
 // ---------------------------------------------------------
 // scene routing
 // ---------------------------------------------------------
@@ -9535,7 +9588,7 @@ function showScene(id) {
     stars: "Little things I love",
     letter: "A letter for you",
     food: "The important things",
-    finale: "With all my love"
+    finale: ""
   };
 
   sceneLabel.textContent = labels[id] || "For Morgan";
