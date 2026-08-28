@@ -1167,16 +1167,8 @@ h3 {
   text-transform: uppercase;
 }
 
-.video-status {
-  min-height: 1.4em;
-  margin: 11px 2px 2px;
-  color: var(--ink-soft);
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  line-height: 1.45;
-}
-
-.video-ended-panel {
+.video-ended-panel,
+.video-play-panel {
   background: linear-gradient(135deg, var(--purple-5), var(--purple-4));
 }
 
@@ -1200,6 +1192,7 @@ h3 {
   border-radius: 8px;
   background: var(--yellow);
   font-size: 0.76rem;
+  text-align: center;
   transform: rotate(-1deg);
 }
 
@@ -9061,7 +9054,7 @@ tr th {
       <div id="birthdayVideoModal" class="birthday-video-modal" role="dialog" aria-modal="true" aria-labelledby="videoTitle" hidden>
         <div class="birthday-video-card">
           <div class="video-card-header">
-            <p id="videoTitle">A little birthday video</p>
+            <p id="videoTitle">sorry ahhhh its so cringe</p>
             <button id="closeVideoBtn" class="video-close" type="button" aria-label="Close birthday video">x</button>
           </div>
           <div class="video-frame">
@@ -9070,11 +9063,13 @@ tr th {
               <p>Your birthday video goes here.</p>
               <span>Add it whenever you are ready.</span>
             </div>
+            <div id="videoPlayPanel" class="video-placeholder video-play-panel" hidden>
+              <button id="videoPlayBtn" class="button button-primary" type="button">Play now</button>
+            </div>
             <div id="videoEndedPanel" class="video-placeholder video-ended-panel" hidden>
               <button id="videoRestartBtn" class="button button-primary" type="button">Start again</button>
             </div>
           </div>
-          <p id="videoStatus" class="video-status" aria-live="polite">You lit every candle. Press play when you are ready.</p>
         </div>
       </div>
     </section>
@@ -9415,8 +9410,9 @@ const candlesScene = document.getElementById("candles");
 const birthdayVideoModal = document.getElementById("birthdayVideoModal");
 const birthdayVideo = document.getElementById("birthdayVideo");
 const videoPlaceholder = document.getElementById("videoPlaceholder");
+const videoPlayPanel = document.getElementById("videoPlayPanel");
+const videoPlayBtn = document.getElementById("videoPlayBtn");
 const videoEndedPanel = document.getElementById("videoEndedPanel");
-const videoStatus = document.getElementById("videoStatus");
 const closeVideoBtn = document.getElementById("closeVideoBtn");
 const videoRestartBtn = document.getElementById("videoRestartBtn");
 
@@ -9464,6 +9460,7 @@ wishBtn.addEventListener("click", () => requestScene("stars"));
 closeVideoBtn.addEventListener("click", closeBirthdayVideo);
 birthdayVideo.addEventListener("ended", handleBirthdayVideoEnded);
 birthdayVideo.addEventListener("click", toggleBirthdayVideoPlayback);
+videoPlayBtn.addEventListener("click", playBirthdayVideoNow);
 videoRestartBtn.addEventListener("click", restartBirthdayVideo);
 balloonNextBtn.addEventListener("click", () => requestScene("letter"));
 balloonStartBtn.addEventListener("click", startBalloonGame);
@@ -9714,10 +9711,10 @@ function showBirthdayVideo() {
   birthdayVideoModal.hidden = false;
   candlesScene.classList.add("video-showing");
   videoEndedPanel.hidden = true;
+  videoPlayPanel.hidden = true;
   closeVideoBtn.focus();
 
   if (!BIRTHDAY_VIDEO_FILE) {
-    videoStatus.textContent = "Your birthday video will appear here once it is added.";
     return;
   }
 
@@ -9725,12 +9722,14 @@ function showBirthdayVideo() {
     birthdayVideo.src = BIRTHDAY_VIDEO_FILE;
   }
   videoPlaceholder.hidden = true;
-  birthdayVideo.hidden = false;
+  birthdayVideo.hidden = true;
+  videoPlayPanel.hidden = false;
+}
 
-  videoStatus.textContent = "You lit every candle. Press play when you are ready.";
-  birthdayVideo.play().catch(() => {
-    videoStatus.textContent = "Press play when you are ready.";
-  });
+function playBirthdayVideoNow() {
+  videoPlayPanel.hidden = true;
+  birthdayVideo.hidden = false;
+  birthdayVideo.play().catch(() => {});
 }
 
 function toggleBirthdayVideoPlayback() {
@@ -9746,17 +9745,13 @@ function handleBirthdayVideoEnded() {
   birthdayVideo.pause();
   birthdayVideo.hidden = true;
   videoEndedPanel.hidden = false;
-  videoStatus.textContent = "That's the whole thing ♡";
 }
 
 function restartBirthdayVideo() {
   videoEndedPanel.hidden = true;
   birthdayVideo.hidden = false;
   birthdayVideo.currentTime = 0;
-  videoStatus.textContent = "Here we go again.";
-  birthdayVideo.play().catch(() => {
-    videoStatus.textContent = "Press play when you are ready.";
-  });
+  birthdayVideo.play().catch(() => {});
 }
 
 function closeBirthdayVideo() {
@@ -10132,6 +10127,7 @@ function resetStory() {
   birthdayVideo.hidden = false;
   birthdayVideoModal.hidden = true;
   videoEndedPanel.hidden = true;
+  videoPlayPanel.hidden = true;
   candlesScene.classList.remove("video-showing");
 
   buildBalloonGame();
