@@ -1146,8 +1146,35 @@ h3 {
    [hidden] { display: none } rule in specificity, so toggling the hidden
    attribute from JS was doing nothing visually. Force it to actually work. */
 .video-frame video[hidden],
-.video-placeholder[hidden] {
+.video-placeholder[hidden],
+.video-play-btn[hidden] {
   display: none !important;
+}
+
+.video-play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  padding: 0 0 0 4px;
+  color: var(--purple-5);
+  border: 2px solid var(--line);
+  border-radius: 50%;
+  background: rgba(255, 253, 248, 0.88);
+  box-shadow: 0 10px 22px rgba(53, 39, 91, 0.32);
+  font-size: 1.5rem;
+  line-height: 1;
+  transform: translate(-50%, -50%);
+  transition: transform 180ms ease, background-color 180ms ease;
+}
+
+.video-play-btn:hover {
+  background: var(--yellow);
+  transform: translate(-50%, -50%) scale(1.08);
 }
 
 .video-placeholder p {
@@ -1167,8 +1194,7 @@ h3 {
   text-transform: uppercase;
 }
 
-.video-ended-panel,
-.video-play-panel {
+.video-ended-panel {
   background: linear-gradient(135deg, var(--purple-5), var(--purple-4));
 }
 
@@ -9054,17 +9080,17 @@ tr th {
       <div id="birthdayVideoModal" class="birthday-video-modal" role="dialog" aria-modal="true" aria-labelledby="videoTitle" hidden>
         <div class="birthday-video-card">
           <div class="video-card-header">
-            <p id="videoTitle">sorry ahhhh its so cringe</p>
+            <p id="videoTitle">Happy birthday to youuuu</p>
             <button id="closeVideoBtn" class="video-close" type="button" aria-label="Close birthday video">x</button>
           </div>
           <div class="video-frame">
             <video id="birthdayVideo" playsinline preload="metadata" hidden></video>
+            <button id="videoPlayBtn" class="video-play-btn" type="button" aria-label="Play video" hidden>
+              <span aria-hidden="true">&#9654;</span>
+            </button>
             <div id="videoPlaceholder" class="video-placeholder">
               <p>Your birthday video goes here.</p>
               <span>Add it whenever you are ready.</span>
-            </div>
-            <div id="videoPlayPanel" class="video-placeholder video-play-panel" hidden>
-              <button id="videoPlayBtn" class="button button-primary" type="button">Play now</button>
             </div>
             <div id="videoEndedPanel" class="video-placeholder video-ended-panel" hidden>
               <button id="videoRestartBtn" class="button button-primary" type="button">Start again</button>
@@ -9410,7 +9436,6 @@ const candlesScene = document.getElementById("candles");
 const birthdayVideoModal = document.getElementById("birthdayVideoModal");
 const birthdayVideo = document.getElementById("birthdayVideo");
 const videoPlaceholder = document.getElementById("videoPlaceholder");
-const videoPlayPanel = document.getElementById("videoPlayPanel");
 const videoPlayBtn = document.getElementById("videoPlayBtn");
 const videoEndedPanel = document.getElementById("videoEndedPanel");
 const closeVideoBtn = document.getElementById("closeVideoBtn");
@@ -9711,7 +9736,7 @@ function showBirthdayVideo() {
   birthdayVideoModal.hidden = false;
   candlesScene.classList.add("video-showing");
   videoEndedPanel.hidden = true;
-  videoPlayPanel.hidden = true;
+  videoPlayBtn.hidden = true;
   closeVideoBtn.focus();
 
   if (!BIRTHDAY_VIDEO_FILE) {
@@ -9722,13 +9747,12 @@ function showBirthdayVideo() {
     birthdayVideo.src = BIRTHDAY_VIDEO_FILE;
   }
   videoPlaceholder.hidden = true;
-  birthdayVideo.hidden = true;
-  videoPlayPanel.hidden = false;
+  birthdayVideo.hidden = false;
+  videoPlayBtn.hidden = false;
 }
 
 function playBirthdayVideoNow() {
-  videoPlayPanel.hidden = true;
-  birthdayVideo.hidden = false;
+  videoPlayBtn.hidden = true;
   birthdayVideo.play().catch(() => {});
 }
 
@@ -10127,7 +10151,7 @@ function resetStory() {
   birthdayVideo.hidden = false;
   birthdayVideoModal.hidden = true;
   videoEndedPanel.hidden = true;
-  videoPlayPanel.hidden = true;
+  videoPlayBtn.hidden = true;
   candlesScene.classList.remove("video-showing");
 
   buildBalloonGame();
