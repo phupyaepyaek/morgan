@@ -10081,43 +10081,8 @@ function clearFoodMontage() {
 
 function typeLetterInBeats(content) {
   clearTypingTimers();
-  typedLetter.textContent = "";
-  finaleBtn.classList.add("hidden");
-
-  const paragraphs = content.split("\n\n");
-  let paragraphIndex = 0;
-
-  function typeParagraph() {
-    if (paragraphIndex >= paragraphs.length) {
-      finaleBtn.classList.remove("hidden");
-      return;
-    }
-
-    const paragraph = paragraphs[paragraphIndex];
-    let characterIndex = 0;
-
-    function typeCharacter() {
-      if (characterIndex < paragraph.length) {
-        typedLetter.textContent += paragraph[characterIndex];
-        characterIndex += 1;
-        scheduleTyping(typeCharacter, reducedMotion ? 0 : 15);
-        return;
-      }
-
-      paragraphIndex += 1;
-      if (paragraphIndex < paragraphs.length) typedLetter.textContent += "\n\n";
-      scheduleTyping(typeParagraph, reducedMotion ? 0 : 560);
-    }
-
-    typeCharacter();
-  }
-
-  typeParagraph();
-}
-
-function scheduleTyping(callback, delay) {
-  const timer = window.setTimeout(callback, delay);
-  state.typingTimers.push(timer);
+  typedLetter.textContent = content;
+  finaleBtn.classList.remove("hidden");
 }
 
 function clearTypingTimers() {
