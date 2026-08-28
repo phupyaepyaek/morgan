@@ -9595,7 +9595,7 @@ function hideSplashScreen() {
 // ---------------------------------------------------------
 function startBackgroundMusic() {
   if (!bgMusic || !bgMusic.paused) return;
-  bgMusic.volume = 0.01;
+  bgMusic.volume = 0.005;
   bgMusic.play().catch(() => {});
 }
 
