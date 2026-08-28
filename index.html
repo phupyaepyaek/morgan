@@ -1057,18 +1057,11 @@ h3 {
   transition: transform 180ms ease, background-color 180ms ease;
 }
 
-.music-control {
+.music-toggle {
   position: fixed;
   top: 14px;
   right: 14px;
-  z-index: 150;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.music-toggle {
-  flex: none;
+  z-index: 500;
   width: 34px;
   height: 34px;
   display: grid;
@@ -1097,28 +1090,8 @@ h3 {
   text-decoration: line-through;
 }
 
-.music-volume {
-  width: 0;
-  height: 34px;
-  margin: 0;
-  padding: 0 0 0 6px;
-  opacity: 0;
-  overflow: hidden;
-  border: 0;
-  accent-color: var(--purple-4);
-  background: transparent;
-  cursor: pointer;
-  transition: width 200ms ease, opacity 200ms ease;
-}
-
-.music-control:hover .music-volume,
-.music-control:focus-within .music-volume {
-  width: 84px;
-  opacity: 1;
-}
-
 @media (max-width: 760px) {
-  .music-control {
+  .music-toggle {
     top: 10px;
     right: 10px;
   }
@@ -8937,12 +8910,9 @@ tr th {
     </div>
   </div>
   <audio id="bgMusic" src="audio/bg-music.m4a" loop preload="auto" hidden></audio>
-  <div id="musicControl" class="music-control">
-    <button id="musicToggleBtn" class="music-toggle" type="button" aria-pressed="false" aria-label="Mute background music">
-      <span aria-hidden="true">&#9834;</span>
-    </button>
-    <input id="musicVolumeSlider" class="music-volume" type="range" min="0" max="100" value="6" step="1" aria-label="Music volume" />
-  </div>
+  <button id="musicToggleBtn" class="music-toggle" type="button" aria-pressed="false" aria-label="Mute background music">
+    <span aria-hidden="true">&#9834;</span>
+  </button>
 
   <div class="atmosphere" aria-hidden="true">
     <div class="moon moon-one"></div>
@@ -9444,7 +9414,6 @@ const secretAchievementClose = document.getElementById("secretAchievementClose")
 const origamiTransition = document.getElementById("origamiTransition");
 const bgMusic = document.getElementById("bgMusic");
 const musicToggleBtn = document.getElementById("musicToggleBtn");
-const musicVolumeSlider = document.getElementById("musicVolumeSlider");
 
 const promiseArea = document.getElementById("promiseArea");
 const yesBtn = document.getElementById("yesBtn");
@@ -9587,7 +9556,7 @@ function hideSplashScreen() {
 // ---------------------------------------------------------
 function startBackgroundMusic() {
   if (!bgMusic || !bgMusic.paused) return;
-  bgMusic.volume = Number(musicVolumeSlider.value) / 100;
+  bgMusic.volume = 0.06;
   bgMusic.play().catch(() => {});
 }
 
@@ -9595,19 +9564,14 @@ function startBackgroundMusic() {
   document.addEventListener(eventName, startBackgroundMusic, { once: true });
 });
 
-function setMusicMuted(muted) {
-  bgMusic.muted = muted;
-  musicToggleBtn.classList.toggle("is-muted", muted);
-  musicToggleBtn.setAttribute("aria-pressed", String(muted));
-  musicToggleBtn.setAttribute("aria-label", muted ? "Unmute background music" : "Mute background music");
+function toggleMusicMute() {
+  bgMusic.muted = !bgMusic.muted;
+  musicToggleBtn.classList.toggle("is-muted", bgMusic.muted);
+  musicToggleBtn.setAttribute("aria-pressed", String(bgMusic.muted));
+  musicToggleBtn.setAttribute("aria-label", bgMusic.muted ? "Unmute background music" : "Mute background music");
 }
 
-musicToggleBtn.addEventListener("click", () => setMusicMuted(!bgMusic.muted));
-
-musicVolumeSlider.addEventListener("input", () => {
-  bgMusic.volume = Number(musicVolumeSlider.value) / 100;
-  if (bgMusic.muted && bgMusic.volume > 0) setMusicMuted(false);
-});
+musicToggleBtn.addEventListener("click", toggleMusicMute);
 
 // ---------------------------------------------------------
 // scene routing
