@@ -8934,6 +8934,7 @@ tr th {
       <p class="eyebrow splash-eyebrow">loading a little something</p>
     </div>
   </div>
+  <audio id="bgMusic" src="audio/bg-music.m4a" loop preload="auto" hidden></audio>
 
   <div class="atmosphere" aria-hidden="true">
     <div class="moon moon-one"></div>
@@ -9434,6 +9435,7 @@ const secretCandleBtn = document.getElementById("secretCandleBtn");
 const secretAchievement = document.getElementById("secretAchievement");
 const secretAchievementClose = document.getElementById("secretAchievementClose");
 const origamiTransition = document.getElementById("origamiTransition");
+const bgMusic = document.getElementById("bgMusic");
 
 const promiseArea = document.getElementById("promiseArea");
 const yesBtn = document.getElementById("yesBtn");
@@ -9560,6 +9562,7 @@ if (pointerDevice && !reducedMotion) {
 buildCandles();
 buildBalloonGame();
 hideSplashScreen();
+startBackgroundMusic();
 
 // ---------------------------------------------------------
 // splash (not present in your real script, so this is my
@@ -9571,6 +9574,22 @@ function hideSplashScreen() {
   window.setTimeout(() => splash.classList.add("is-opening"), reducedMotion ? 0 : 700);
   window.setTimeout(() => { splash.hidden = true; }, reducedMotion ? 0 : 1300);
 }
+
+// ---------------------------------------------------------
+// background music: browsers block audio with sound from
+// autoplaying before the visitor has interacted with the page,
+// so this tries right away and, if that's blocked, falls back
+// to starting on the visitor's first tap/click/key press.
+// ---------------------------------------------------------
+function startBackgroundMusic() {
+  if (!bgMusic || !bgMusic.paused) return;
+  bgMusic.volume = 0.16;
+  bgMusic.play().catch(() => {});
+}
+
+["pointerdown", "keydown"].forEach((eventName) => {
+  document.addEventListener(eventName, startBackgroundMusic, { once: true });
+});
 
 // ---------------------------------------------------------
 // scene routing
