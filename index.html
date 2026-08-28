@@ -9,51 +9,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=DM+Mono:wght@400;500&family=Italianno&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet" />
   <style>
-/* DEV-ONLY: scene jumper toolbar. Safe to delete this whole block plus the
-   #devNav markup near <body> and the wiring near "dev nav" in the script
-   once you're done testing. */
-.dev-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 999999;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 10px;
-  background: #1a1a1a;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
-  font-family: "DM Mono", monospace;
-  font-size: 11px;
-}
-
-.dev-nav-label {
-  margin-right: 4px;
-  padding: 3px 6px;
-  border-radius: 3px;
-  background: #ff4d4d;
-  color: #fff;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-}
-
-.dev-nav button {
-  padding: 5px 10px;
-  border: 1px solid #444;
-  border-radius: 4px;
-  background: #2b2b2b;
-  color: #eee;
-  font-family: inherit;
-  font-size: 11px;
-  cursor: pointer;
-}
-
-.dev-nav button:hover {
-  background: #3d3d3d;
-  border-color: #666;
-}
-
 :root {
   --ink: #594568;
   --ink-soft: #85728f;
@@ -8917,15 +8872,6 @@ tr th {
 </style>
 </head>
 <body>
-  <div id="devNav" class="dev-nav" aria-label="Dev scene jumper">
-    <span class="dev-nav-label">DEV</span>
-    <button type="button" data-dev-scene="landing">Landing</button>
-    <button type="button" data-dev-scene="candles">Candles</button>
-    <button type="button" data-dev-scene="stars">Stars</button>
-    <button type="button" data-dev-scene="letter">Letter</button>
-    <button type="button" data-dev-scene="food">Food</button>
-    <button type="button" data-dev-scene="finale">Finale</button>
-  </div>
   <div id="splashScreen" class="splash-screen" aria-hidden="true">
     <div class="splash-content">
       <div class="splash-icon" aria-hidden="true">M</div>
@@ -9510,12 +9456,6 @@ envelopeBtn.addEventListener("click", openLetter);
 finaleBtn.addEventListener("click", () => requestScene("food"));
 foodContinueBtn.addEventListener("click", showFinale);
 replayBtn.addEventListener("click", () => window.location.reload());
-
-// DEV-ONLY: scene jumper wiring. Delete this block (and #devNav in the HTML,
-// and its CSS block near the top of <style>) once you're done testing.
-document.querySelectorAll("[data-dev-scene]").forEach((btn) => {
-  btn.addEventListener("click", () => requestScene(btn.dataset.devScene));
-});
 
 document.addEventListener("click", (event) => {
   if (event.clientX || event.clientY) {
