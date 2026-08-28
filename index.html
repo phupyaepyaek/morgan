@@ -1192,7 +1192,11 @@ h3 {
 
 .video-ended-panel {
   padding: 0;
-  background: transparent;
+  background: center / cover no-repeat url("food-photos/video-poster.jpg");
+}
+
+.video-replay-btn {
+  padding: 0;
 }
 
 #candles.video-showing .cake-stage {
@@ -9086,8 +9090,11 @@ tr th {
               <span>Add it whenever you are ready.</span>
             </div>
             <div id="videoEndedPanel" class="video-placeholder video-ended-panel" hidden>
-              <button id="videoRestartBtn" class="video-play-btn" type="button" aria-label="Play video again">
-                <span aria-hidden="true">&#8635;</span>
+              <button id="videoRestartBtn" class="video-play-btn video-replay-btn" type="button" aria-label="Play video again">
+                <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M20 12a8 8 0 1 1-2.34-5.66" />
+                  <polyline points="20 4 20 9 15 9" />
+                </svg>
               </button>
             </div>
           </div>
@@ -9789,11 +9796,13 @@ function toggleBirthdayVideoPlayback() {
 
 function handleBirthdayVideoEnded() {
   birthdayVideo.pause();
+  birthdayVideo.hidden = true;
   videoEndedPanel.hidden = false;
 }
 
 function restartBirthdayVideo() {
   videoEndedPanel.hidden = true;
+  birthdayVideo.hidden = false;
   birthdayVideo.currentTime = 0;
   birthdayVideo.play().catch(() => {});
 }
