@@ -8904,7 +8904,7 @@ tr th {
   <div id="splashScreen" class="splash-screen" aria-hidden="true">
     <div class="splash-content">
       <div class="splash-icon" aria-hidden="true">M</div>
-      <p class="splash-appname">Morgan's bday mini-game</p>
+      <p class="splash-appname">Morgan's birthday</p>
       <div class="splash-spinner" aria-hidden="true"></div>
       <p class="eyebrow splash-eyebrow">loading a little something</p>
     </div>
@@ -9548,8 +9548,8 @@ startBackgroundMusic();
 function hideSplashScreen() {
   const splash = document.getElementById("splashScreen");
   if (!splash) return;
-  window.setTimeout(() => splash.classList.add("is-opening"), reducedMotion ? 0 : 700);
-  window.setTimeout(() => { splash.hidden = true; }, reducedMotion ? 0 : 1300);
+  window.setTimeout(() => splash.classList.add("is-opening"), reducedMotion ? 0 : 1600);
+  window.setTimeout(() => { splash.hidden = true; }, reducedMotion ? 0 : 2200);
 }
 
 // ---------------------------------------------------------
