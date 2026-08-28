@@ -9509,7 +9509,7 @@ balloonStartBtn.addEventListener("click", startBalloonGame);
 envelopeBtn.addEventListener("click", openLetter);
 finaleBtn.addEventListener("click", () => requestScene("food"));
 foodContinueBtn.addEventListener("click", showFinale);
-replayBtn.addEventListener("click", resetStory);
+replayBtn.addEventListener("click", () => window.location.reload());
 
 // DEV-ONLY: scene jumper wiring. Delete this block (and #devNav in the HTML,
 // and its CSS block near the top of <style>) once you're done testing.
@@ -10150,65 +10150,6 @@ function clearTypingTimers() {
 function showFinale() {
   requestScene("finale");
   window.setTimeout(createConfetti, reducedMotion ? 0 : 750);
-}
-
-function resetStory() {
-  clearTypingTimers();
-  clearFoodMontage();
-  state.noAttempts = 0;
-  state.candles.clear();
-  state.candleWaveInProgress = false;
-  clearBalloonGameTimers();
-  state.letterOpened = false;
-
-  yesBtn.disabled = false;
-  noBtn.disabled = false;
-  noBtn.textContent = "I hate birthdays";
-  noBtn.style.transform = "translate(0, 0)";
-  promiseStatus.textContent = "Made with too much free time and an unreasonable amount of affection.";
-  birthdayEnvelope.classList.remove("open", "shake");
-  birthdayEnvelope.setAttribute("aria-expanded", "false");
-  birthdayEnvelope.setAttribute("aria-label", "A sealed birthday letter");
-  envelopeMessage.textContent = "";
-
-  candleRack.querySelectorAll(".candle").forEach((candle) => {
-    candle.classList.remove("lit");
-  });
-  candleCount.textContent = `Candles lit: 0 / ${CANDLE_TOTAL}`;
-  cakeTapTarget.disabled = false;
-  cakeTapTarget.setAttribute("aria-label", "Tap the cake to light the first three candles");
-  wishBtn.classList.add("hidden");
-  candlesScene.style.setProperty("--candle-light", "0");
-  candlesScene.style.setProperty("--cake-brightness", "0.75");
-  birthdayVideo.pause();
-  birthdayVideo.currentTime = 0;
-  birthdayVideo.hidden = false;
-  birthdayVideoModal.hidden = true;
-  videoEndedPanel.hidden = true;
-  videoPlayBtn.hidden = true;
-  bgMusic.pause();
-  bgMusic.currentTime = 0;
-  candlesScene.classList.remove("video-showing");
-
-  buildBalloonGame();
-
-  envelopeBtn.disabled = false;
-  envelopeBtn.classList.remove("is-opening");
-  envelopeHint.textContent = "Tap the seal when you are ready.";
-  letterScene.classList.remove("letter-open");
-  letterLead.textContent = "";
-  typedLetter.textContent = "";
-  finaleBtn.classList.add("hidden");
-  foodLine.textContent = "";
-  foodLine.className = "food-message";
-  foodContinueBtn.disabled = true;
-  foodContinueBtn.classList.remove("is-ready");
-  state.foodMemories = [];
-  foodCanvas.querySelectorAll(".food-memory, .food-spark").forEach((element) => element.remove());
-
-  origamiTransition.hidden = true;
-
-  showScene("landing");
 }
 
 // ---------------------------------------------------------
