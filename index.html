@@ -8488,6 +8488,50 @@ tr th {
   border-radius: 3px;
 }
 
+.letter-body-shell {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+}
+
+.letter-body-shell::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 6px;
+  bottom: 0;
+  height: 34px;
+  background: linear-gradient(to bottom, transparent, rgba(247, 241, 255, 0.94));
+  pointer-events: none;
+}
+
+.letter-scroll-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  z-index: 2;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  color: var(--purple-4);
+  border: 2px solid var(--line);
+  border-radius: 50%;
+  background: rgba(255, 253, 248, 0.94);
+  box-shadow: 0 6px 14px rgba(56, 43, 87, 0.18);
+  font-size: 0.95rem;
+  line-height: 1;
+  pointer-events: none;
+  transform: translateX(-50%);
+  animation: letter-scroll-bounce 1.6s ease-in-out infinite;
+}
+
+@keyframes letter-scroll-bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(5px); }
+}
+
 #letter #finaleBtn {
   flex: 0 0 auto;
   align-self: center;
@@ -9216,7 +9260,10 @@ tr th {
 
       <article id="letterPanel" class="letter-panel" aria-live="polite">
         <p id="letterLead" class="letter-lead"></p>
-        <div id="typedLetter" class="letter-body"></div>
+        <div class="letter-body-shell">
+          <div id="typedLetter" class="letter-body"></div>
+          <span class="letter-scroll-hint" aria-hidden="true">&#8964;</span>
+        </div>
         <button id="finaleBtn" class="button button-primary hidden" type="button">Continue <span aria-hidden="true">-&gt;</span></button>
       </article>
     </section>
@@ -9570,7 +9617,7 @@ function hideSplashScreen() {
 // ---------------------------------------------------------
 function startBackgroundMusic() {
   if (!bgMusic || !bgMusic.paused) return;
-  bgMusic.volume = 0.035;
+  bgMusic.volume = 0.02;
   bgMusic.play().catch(() => {});
 }
 
