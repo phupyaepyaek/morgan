@@ -10186,6 +10186,8 @@ function resetStory() {
   birthdayVideoModal.hidden = true;
   videoEndedPanel.hidden = true;
   videoPlayBtn.hidden = true;
+  bgMusic.pause();
+  bgMusic.currentTime = 0;
   candlesScene.classList.remove("video-showing");
 
   buildBalloonGame();
