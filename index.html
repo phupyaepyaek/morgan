@@ -8466,7 +8466,7 @@ tr th {
   flex: 1 1 auto;
   min-height: 0;
   margin: 0;
-  padding-right: clamp(4px, 1.6vw, 14px);
+  padding-right: clamp(10px, 2.4vw, 20px);
   overflow-y: auto;
   overscroll-behavior: contain;
   color: var(--ink);
@@ -8475,17 +8475,11 @@ tr th {
   font-weight: 600;
   line-height: 1.7;
   text-shadow: none;
-  scrollbar-width: thin;
-  scrollbar-color: var(--purple-3) transparent;
+  scrollbar-width: none;
 }
 
 #letter .letter-body::-webkit-scrollbar {
-  width: 6px;
-}
-
-#letter .letter-body::-webkit-scrollbar-thumb {
-  background: var(--purple-3);
-  border-radius: 3px;
+  display: none;
 }
 
 .letter-body-shell {
@@ -8495,41 +8489,24 @@ tr th {
   display: flex;
 }
 
-.letter-body-shell::after {
-  content: "";
+.letter-scrollbar {
   position: absolute;
+  top: 2px;
+  right: 0;
+  bottom: 2px;
+  width: 4px;
+  border-radius: 3px;
+  background: rgba(148, 114, 173, 0.2);
+  pointer-events: none;
+}
+
+.letter-scrollbar-thumb {
+  position: absolute;
+  top: 0;
   left: 0;
-  right: 6px;
-  bottom: 0;
-  height: 34px;
-  background: linear-gradient(to bottom, transparent, rgba(247, 241, 255, 0.94));
-  pointer-events: none;
-}
-
-.letter-scroll-hint {
-  position: absolute;
-  left: 50%;
-  bottom: 6px;
-  z-index: 2;
-  width: 28px;
-  height: 28px;
-  display: grid;
-  place-items: center;
-  color: var(--purple-4);
-  border: 2px solid var(--line);
-  border-radius: 50%;
-  background: rgba(255, 253, 248, 0.94);
-  box-shadow: 0 6px 14px rgba(56, 43, 87, 0.18);
-  font-size: 0.95rem;
-  line-height: 1;
-  pointer-events: none;
-  transform: translateX(-50%);
-  animation: letter-scroll-bounce 1.6s ease-in-out infinite;
-}
-
-@keyframes letter-scroll-bounce {
-  0%, 100% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-50%) translateY(5px); }
+  width: 100%;
+  border-radius: 3px;
+  background: var(--purple-3);
 }
 
 #letter #finaleBtn {
@@ -9262,7 +9239,7 @@ tr th {
         <p id="letterLead" class="letter-lead"></p>
         <div class="letter-body-shell">
           <div id="typedLetter" class="letter-body"></div>
-          <span class="letter-scroll-hint" aria-hidden="true">&#8964;</span>
+          <div class="letter-scrollbar" aria-hidden="true"><div id="letterScrollThumb" class="letter-scrollbar-thumb"></div></div>
         </div>
         <button id="finaleBtn" class="button button-primary hidden" type="button">Continue <span aria-hidden="true">-&gt;</span></button>
       </article>
@@ -9515,6 +9492,7 @@ const envelopeBtn = document.getElementById("envelopeBtn");
 const envelopeHint = document.getElementById("envelopeHint");
 const letterLead = document.getElementById("letterLead");
 const typedLetter = document.getElementById("typedLetter");
+const letterScrollThumb = document.getElementById("letterScrollThumb");
 const finaleBtn = document.getElementById("finaleBtn");
 const foodScene = document.getElementById("food");
 const foodContinueBtn = document.getElementById("foodContinueBtn");
@@ -10144,6 +10122,32 @@ function typeLetterInBeats(content) {
   clearTypingTimers();
   typedLetter.textContent = content;
   finaleBtn.classList.remove("hidden");
+  updateLetterScrollThumb();
+}
+
+function updateLetterScrollThumb() {
+  if (!letterScrollThumb) return;
+  const track = letterScrollThumb.parentElement;
+  const trackHeight = track.clientHeight;
+  const contentHeight = typedLetter.scrollHeight;
+  const visibleHeight = typedLetter.clientHeight;
+
+  if (contentHeight <= visibleHeight || trackHeight <= 0) {
+    letterScrollThumb.style.opacity = "0";
+    return;
+  }
+
+  const thumbHeight = Math.max(24, (visibleHeight / contentHeight) * trackHeight);
+  const maxThumbTop = trackHeight - thumbHeight;
+  const scrollRatio = typedLetter.scrollTop / (contentHeight - visibleHeight);
+  letterScrollThumb.style.opacity = "1";
+  letterScrollThumb.style.height = `${thumbHeight}px`;
+  letterScrollThumb.style.top = `${maxThumbTop * scrollRatio}px`;
+}
+
+if (typedLetter) {
+  typedLetter.addEventListener("scroll", updateLetterScrollThumb);
+  window.addEventListener("resize", updateLetterScrollThumb);
 }
 
 function clearTypingTimers() {
